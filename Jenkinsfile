@@ -9,10 +9,12 @@ pipeline {
     }
 
     stages {
-        stage('Print Git Repo URL') {
+        stage('Checkout SCM') {
             steps {
                 echo "Cloning from repository: ${GIT_REPO_URL}"
                 echo "Project: ${IMAGE_NAME}"
+                // Checkout the 'main' branch explicitly
+                checkout([$class: 'GitSCM', branches: [[name: 'refs/heads/main']], extensions: [], userRemoteConfigs: [[url: GIT_REPO_URL]]])
             }
         }
 
@@ -32,7 +34,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing image to Docker Hub...'
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER_VAR', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER_VAR', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER_VAR" --password-stdin
                         docker tag ${IMAGE_NAME}:${IMAGE_TAG} docker.io/$DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
