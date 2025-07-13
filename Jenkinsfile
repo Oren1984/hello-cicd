@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'hello-cicd'
         IMAGE_TAG = 'latest'
-        DOCKER_USER = 'oren692'  
+        DOCKER_USER = 'Oren1984'  
         GIT_REPO_URL = 'https://github.com/Oren1984/hello-cicd.git'
     }
 
