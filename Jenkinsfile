@@ -1,9 +1,10 @@
 pipeline {
-    agent any
+    agent any  // שינינו מ-'worker' ל-'any'
 
     environment {
         IMAGE_NAME = 'hello-cicd'
         IMAGE_TAG = 'latest'
+        DOCKER_USER = 'oren1948'  
         GIT_REPO_URL = 'https://github.com/Oren1984/hello-cicd.git'
     }
 
@@ -23,20 +24,31 @@ pipeline {
 
         stage('Scan with Trivy') {
             steps {
-                echo "Scanning Docker image for vulnerabilities (critical/high)..."
-                sh "trivy image --scanners vuln --severity CRITICAL,HIGH --no-progress ${IMAGE_NAME}:${IMAGE_TAG} || true"
+                echo 'Scanning Docker image for vulnerabilities (critical/high)...'
+                sh "trivy image --scanners vuln --severity CRITICAL,HIGH --no-progress ${IMAGE_NAME}:${IMAGE_TAG}"
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo 'Pushing image to Docker Hub...'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER_VAR', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER_VAR" --password-stdin
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} docker.io/$DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
+                        docker push docker.io/$DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
+                        docker logout
+                    '''
+                }
             }
         }
 
         stage('Run Container') {
             steps {
-                sh '''
-                    echo "Removing existing container (if any)..."
-                    docker rm -f ${IMAGE_NAME}-container || true
-
-                    echo "Running new container..."
-                    docker run -d --name ${IMAGE_NAME}-container -p 5000:5000 ${IMAGE_NAME}:${IMAGE_TAG}
-                '''
+                echo 'Removing existing container (if any)...'
+                sh "docker rm -f ${IMAGE_NAME}-container || true"
+                echo 'Running new container...'
+                sh "docker run -d --name ${IMAGE_NAME}-container -p 5000:5000 ${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
     }
