@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'worker' }
+    agent any
 
     environment {
         IMAGE_NAME = 'hello-cicd'
