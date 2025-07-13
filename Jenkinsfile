@@ -1,5 +1,5 @@
 pipeline {
-    agent any  // שינינו מ-'worker' ל-'any'
+    agent any 
 
     environment {
         IMAGE_NAME = 'hello-cicd'
