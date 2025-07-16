@@ -46,7 +46,6 @@ Then open your browser at:
 👉 http://localhost:5000
 
 
-📝 Project Status
-✅ Final Project – CI/CD (Basic Part): Completed
+
 
 
