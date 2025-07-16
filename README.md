@@ -14,7 +14,7 @@ This project demonstrates a complete CI/CD pipeline from GitHub to Kubernetes us
 - Helm
 
 
-## 🚀 Pipeline Flow
+##  Pipeline Flow
 
 1. Code is pushed to GitHub
 2. Jenkins pulls the latest code and runs the pipeline:
