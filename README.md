@@ -19,6 +19,7 @@ of a simple **Flask web application**.
 ---
 
 ## 📁 Project Structure
+```plaintext
 hello-cicd/
 ├── app.py # Flask application
 ├── Dockerfile # Container build file
