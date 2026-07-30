@@ -75,10 +75,8 @@ helm uninstall hello-cicd-release
 
 ## Notes
 
-- Includes QA documentation under QA_Docs/
-
-- One vulnerability detected during scan (zlib1g)
-
-- Built for learning and CI/CD demonstration
+- Built as a practical CI/CD and Kubernetes demonstration
+- Includes automated container vulnerability scanning with Trivy
+- Uses Helm for repeatable Kubernetes deployment
 
 ---
